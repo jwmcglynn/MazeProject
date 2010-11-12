@@ -14,7 +14,7 @@ public class Test extends JFrame
     {
         super();
 
-        MazeGenerator mg = new MazeGenerator(0);
+        MazeGenerator mg = new MazeGenerator();
         mz = mg.generateMaze(70,50);
         MazeSolver ms = new MazeSolver();
         LinkedList<Pair> solution = ms.solveMaze(mz);
