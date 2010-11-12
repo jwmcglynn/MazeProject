@@ -34,17 +34,19 @@ public class WilsonGenerator implements IGenerator {
 	public WilsonGenerator() {
 	}
 	
-	private Pair neighbor(Pair cur, int dir) {
-		Pair res = new Pair(cur.x, cur.y);
+	private Pair neighbor(Pair cur, int dir, Vertex[][] maze) {
+		int x = cur.x;
+		int y = cur.y;
 		switch (dir) {
-			case 0: --res.x; break; // Left.
-			case 1: ++res.x; break; // Right.
-			case 2: --res.y; break; // Up.
-			case 3: ++res.y; break; // Down.
-			default: assert(false); break;
+			case 0: --x; break; // Left.
+			case 1: ++x; break; // Right.
+			case 2: --y; break; // Up.
+			case 3: ++y; break; // Down.
+			default: return null;
 		}
-		
-		return res;
+
+		if (x >= 0 && x < maze.length && y >= 0 && y < maze[x].length) return maze[x][y].getP();
+		else return null;
 	}
 	
 	public boolean inside(Pair p, int width, int height) {
@@ -54,10 +56,11 @@ public class WilsonGenerator implements IGenerator {
 	public Maze generate(int width, int height) {
 		Maze tmp = new Maze();
 		Maze.WriteableMaze wrmaze = tmp.new WriteableMaze(width, height, false);
+		Vertex[][] maze = wrmaze.getMaze();
 		
 		// TODO: Better start/end spots.
-		wrmaze.setStart(new Pair(0, 0));
-		wrmaze.setEnd(new Pair(width - 1, height - 1));
+		wrmaze.setStart(maze[0][0].getP());
+		wrmaze.setEnd(maze[width - 1][height - 1].getP());
 		
 		boolean connected[][] = new boolean[width][height];
 		connected[0][0] = true;
@@ -65,46 +68,44 @@ public class WilsonGenerator implements IGenerator {
 		int nodesLeft = width * height - 1;
 		
 		Random randomGen = new Random();
-		Hashtable<Pair, Integer> path = new Hashtable<Pair, Integer>();
+		int dirMatrix[][] = new int[width][height];
 		
 		while (nodesLeft > 0) {
 			// Pick a random spot and begin walking a path.
-			Pair cur = new Pair(randomGen.nextInt(width), randomGen.nextInt(height));
-			Pair start = new Pair(cur.x, cur.y);
+			Pair cur = maze[randomGen.nextInt(width)][randomGen.nextInt(height)].getP();
+			Pair start = cur;
 			
 			do {
 				// Pick a random direction.
 				int dir = randomGen.nextInt(4);
-				Pair next = neighbor(cur, dir);
+				Pair next = neighbor(cur, dir, maze);
 				
-				while (!inside(next, width, height)) {
+				while (next == null) {
 					++dir;
 					if (dir > 3) dir = 0;
-					next = neighbor(cur, dir);
+					next = neighbor(cur, dir, maze);
 				}
 				
-				path.put(cur, dir);
+				dirMatrix[cur.x][cur.y] = dir;
 				cur = next;
 			} while (!connected[cur.x][cur.y]);
 			
-			path.put(cur, 4);
+			dirMatrix[cur.x][cur.y] = 4;
 			
 			// Go back and retrace our path.
 			cur = start;
 			
-			 while (path.containsKey(cur) && !connected[cur.x][cur.y]) {
-				int dir = path.get(cur);
+			 while (!connected[cur.x][cur.y]) {
+				int dir = dirMatrix[cur.x][cur.y];
 				
 				connected[cur.x][cur.y] = true;
 				--nodesLeft;
 				
-				Pair next = neighbor(cur, dir);
+				Pair next = neighbor(cur, dir, maze);
 				wrmaze.addEdge(cur, next);
 
 				cur = next;
 			}
-			
-			path.clear();
 		}
 		return wrmaze.getFixedMaze();
 	}
