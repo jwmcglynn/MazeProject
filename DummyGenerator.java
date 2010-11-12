@@ -1,10 +1,14 @@
 import maze.*;
+import maze.Maze.WriteableMaze;
 
 public class DummyGenerator implements IGenerator {
 	public DummyGenerator() {
 	}
 	
-	public void generate(Maze.WriteableMaze wrmaze, int width, int height) {
+	public Maze generate(int width, int height) {
+		Maze tmp = new Maze();
+		Maze.WriteableMaze wrmaze = tmp.new WriteableMaze(width, height, false);
+		
 		Vertex[][] maze = wrmaze.getMaze();
 		
 		wrmaze.setStart(new Pair(0, 0));
@@ -19,5 +23,7 @@ public class DummyGenerator implements IGenerator {
 		for (int j = 0; j < height - 2; ++j) {
 			maze[width - 1][j].addNeighbor(new Pair(width - 1, j + 1));
 		}
+		
+		return wrmaze.getFixedMaze();
 	}
 }
