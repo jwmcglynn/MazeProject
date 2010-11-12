@@ -8,8 +8,6 @@ public class DummyGenerator implements IGenerator {
 		Maze tmp = new Maze();
 		Maze.WriteableMaze wrmaze = tmp.new WriteableMaze(width, height, false);
 		
-		Vertex[][] maze = wrmaze.getMaze();
-		
 		wrmaze.setStart(new Pair(0, 0));
 		wrmaze.setEnd(new Pair(width - 1, height - 1));
 		
