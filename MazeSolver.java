@@ -7,10 +7,7 @@ public class MazeSolver
 
     public LinkedList<Pair> solveMaze(Maze maze)
     {
-
-        return null;
-
+    	DummySolver ds = new DummySolver();
+        return ds.solveMaze(maze);
     }
-
-
 }
