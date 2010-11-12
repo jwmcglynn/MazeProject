@@ -1,5 +1,4 @@
 import maze.*;
-import maze.Maze.WriteableMaze;
 
 public class DummyGenerator implements IGenerator {
 	public DummyGenerator() {
@@ -15,13 +14,13 @@ public class DummyGenerator implements IGenerator {
 		wrmaze.setEnd(new Pair(width - 1, height - 1));
 		
 		// Link horizontally.
-		for (int i = 0; i < width - 2; ++i) {
-			maze[i][0].addNeighbor(new Pair(i + 1, 0));
+		for (int i = 0; i < width - 1; ++i) {
+			wrmaze.addEdge(new Pair(i, 0), new Pair(i + 1, 0));
 		}
 
-		// Link horizontally.
-		for (int j = 0; j < height - 2; ++j) {
-			maze[width - 1][j].addNeighbor(new Pair(width - 1, j + 1));
+		// Link vertically.
+		for (int j = 0; j < height - 1; ++j) {
+			wrmaze.addEdge(new Pair(width - 1, j), new Pair(width - 1, j + 1));
 		}
 		
 		return wrmaze.getFixedMaze();
