@@ -1,10 +1,27 @@
-import maze.*;
-
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Random;
 import java.util.HashSet;
-import java.util.Collection;
+
+import maze.*;
+
+/**
+ * Eller's algorithm from http://www.bluffton.edu/~nesterd/java/mazeprofiler.html
+ * 
+ * 1. Randomly connect some of the cells on the top row of the maze. Make a list 
+ * of the sets of connected cells. (A cell which is not connected to any other 
+ * cell is in a set by itself.) 
+ * 2. For each connected set, make at least one connection between it and the 
+ * next row. Update the connection sets. (A cell in the next row which is not 
+ * connected to other cells constitutes a new connection set.) 
+ * 3. If the next row is NOT the bottom row: On the next row, randomly connect 
+ * some of the cells (and update the connection sets), but do NOT connect two 
+ * cells that are already in the same set. Then return to step 2. 
+ * 4. On the bottom row, connect each pair of adjacent cells if they are not 
+ * already in the same set. 
+**/
+
+
 
 public class EllerGenerator implements IGenerator {
 	public EllerGenerator() {
@@ -31,7 +48,10 @@ public class EllerGenerator implements IGenerator {
 			}
 		}
 		
+		//Begin carving paths.
 		for (int i = 0; i < height - 1; i++) {
+			
+			// HORIZONTAL PATH CARVING RUN THROUGH
 			
 			for (int j = 0; j < width - 1; j++) {
 				
@@ -55,7 +75,8 @@ public class EllerGenerator implements IGenerator {
 			
 			//VERTICAL PATH CARVING RUN THROUGH
 			
-			//Contains sets that do not have a connection to the next row.
+			//Contains sets that do not have a connection to the next row. A Linkedlist is
+			//used because the hashcode changes, making removing difficult.
 			LinkedList<HashSet<Pair>> notConnectedToNextRow = (LinkedList<HashSet<Pair>>) new LinkedList();
 			for (int j = 0; j < width; j++) {
 				notConnectedToNextRow.add(arrayOfSets[j][i]);
@@ -65,7 +86,6 @@ public class EllerGenerator implements IGenerator {
 					wrmaze.addEdge( new Pair(j, i), new Pair(j, i + 1) );
 					merge( arrayOfSets[j][i + 1], arrayOfSets[j][i], arrayOfSets);
 					notConnectedToNextRow.remove(arrayOfSets[j][i]);
-					
 				}
 			}
 			//Ensures that every set in the current row has a connection to the next row.
