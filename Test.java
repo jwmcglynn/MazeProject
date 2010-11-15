@@ -16,8 +16,9 @@ public class Test extends JFrame
     {
         super();
 
-        MazeGenerator mg = new MazeGenerator();
-        mz = mg.generateMaze(70,50);
+        //MazeGenerator mg = new MazeGenerator();
+        IGenerator mg = new WilsonGenerator();
+        mz = mg.generate(70,50);
         MazeSolver ms = new MazeSolver();
         solution = ms.solveMaze(mz);
         System.out.println("numObservations: " + mz.getNumObservations());
