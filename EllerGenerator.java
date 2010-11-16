@@ -27,6 +27,7 @@ public class EllerGenerator implements IGenerator {
 	public EllerGenerator() {
 	}
 	
+	@SuppressWarnings("unchecked")
 	public Maze generate(int width, int height) {
 		Maze tmp = new Maze();
 		Maze.WriteableMaze wrmaze = tmp.new WriteableMaze(width, height, false);

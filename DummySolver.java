@@ -53,9 +53,9 @@ public class DummySolver implements ISolver {
     	}
     	answer.removeFirst();
     	
-    	for(Pair p : answer) {
+    	/*for(Pair p : answer) {
     		System.out.println(p.x + " " + p.y);
-    	}
+    	}*/
     	
     	return answer;
     }
