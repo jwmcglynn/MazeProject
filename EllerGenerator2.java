@@ -34,7 +34,7 @@ public class EllerGenerator2 implements IGenerator {
 	public EllerGenerator2() {
 	}
 	
-	public Maze generate(int width, int height) {
+	public Maze.WriteableMaze generate(int width, int height) {
 		Maze tmp = new Maze();
 		Maze.WriteableMaze wrmaze = tmp.new WriteableMaze(width, height, false);
 		
@@ -95,6 +95,6 @@ public class EllerGenerator2 implements IGenerator {
 			left[x] = x;
 		}
 		
-		return wrmaze.getFixedMaze();
+		return wrmaze;
 	}
 }

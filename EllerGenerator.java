@@ -28,7 +28,7 @@ public class EllerGenerator implements IGenerator {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public Maze generate(int width, int height) {
+	public Maze.WriteableMaze generate(int width, int height) {
 		Maze tmp = new Maze();
 		Maze.WriteableMaze wrmaze = tmp.new WriteableMaze(width, height, false);
 		
@@ -126,7 +126,7 @@ public class EllerGenerator implements IGenerator {
 			}
 		}
 		
-		return wrmaze.getFixedMaze();
+		return wrmaze;
 	}
 	
 	//In order to properly merge two sets, all the pointers that previously pointed to one set

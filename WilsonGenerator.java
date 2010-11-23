@@ -1,4 +1,3 @@
-import java.util.Hashtable;
 import java.util.Random;
 
 import maze.*;
@@ -53,7 +52,7 @@ public class WilsonGenerator implements IGenerator {
 		return (p.x >= 0 && p.x < width && p.y >= 0 && p.y < height);
 	}
 	
-	public Maze generate(int width, int height) {
+	public Maze.WriteableMaze generate(int width, int height) {
 		Maze tmp = new Maze();
 		Maze.WriteableMaze wrmaze = tmp.new WriteableMaze(width, height, false);
 		Vertex[][] maze = wrmaze.getMaze();
@@ -107,6 +106,7 @@ public class WilsonGenerator implements IGenerator {
 				cur = next;
 			}
 		}
-		return wrmaze.getFixedMaze();
+		
+		return wrmaze;
 	}
 }

@@ -16,12 +16,24 @@ public class Test extends JFrame
     {
         super();
 
-        //MazeGenerator mg = new MazeGenerator();
-        IGenerator mg = new WilsonGenerator();
-        mz = mg.generate(70,50);
-        MazeSolver ms = new MazeSolver();
-        solution = ms.solveMaze(mz);
-        System.out.println("numObservations: " + mz.getNumObservations());
+        MazeGenerator mg = new MazeGenerator(MazeGenerator.Type.Wilson);
+        //mz = mg.generateMaze(70,70);
+        mz = mg.generateMaze(500,500);
+        
+        MazeSolver breadthSolver = new MazeSolver(MazeSolver.Type.BreadthFirst);
+        LinkedList<Pair> optimalSolution = breadthSolver.solveMaze(mz);
+        int numMoves = optimalSolution.size();
+        System.out.println(MazeSolver.Type.BreadthFirst + ": optimal path " + numMoves + ", numObservations " + mz.getNumObservations());
+        
+        MazeSolver.Type[] attempts = { MazeSolver.Type.DepthFirst, MazeSolver.Type.BidirectionalDepth };
+        
+        for (MazeSolver.Type type : attempts) {
+            mz = mg.getLastMaze();
+
+            MazeSolver ms = new MazeSolver(type);
+            solution = ms.solveMaze(mz); // make it so that the different solutions are drawn in different colors
+            System.out.println(type + ": Score " + (float) mz.getNumObservations() / numMoves + ", numObservations " + mz.getNumObservations());
+        }
     }
 
     public static void main(String[] args)

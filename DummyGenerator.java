@@ -4,7 +4,7 @@ public class DummyGenerator implements IGenerator {
 	public DummyGenerator() {
 	}
 	
-	public Maze generate(int width, int height) {
+	public Maze.WriteableMaze generate(int width, int height) {
 		Maze tmp = new Maze();
 		Maze.WriteableMaze wrmaze = tmp.new WriteableMaze(width, height, false);
 		
@@ -21,6 +21,6 @@ public class DummyGenerator implements IGenerator {
 			wrmaze.addEdge(new Pair(width - 1, j), new Pair(width - 1, j + 1));
 		}
 		
-		return wrmaze.getFixedMaze();
+		return wrmaze;
 	}
 }
