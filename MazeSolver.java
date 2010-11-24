@@ -8,6 +8,8 @@ public class MazeSolver
 		BreadthFirst
 		, DepthFirst
 		, BidirectionalDepth
+		, AStarSimple
+		, AStar
 	}
 	
 	private Type m_genType;
@@ -31,6 +33,12 @@ public class MazeSolver
 	    		break;
 	    	case BidirectionalDepth:
 	    		ds = new BidirectionalDepthSolver();
+	    		break;
+	    	case AStarSimple:
+	    		ds = new AStarSolverSimple();
+	    		break;
+	    	case AStar:
+	    		ds = new AStarSolver();
 	    		break;
     	}
 

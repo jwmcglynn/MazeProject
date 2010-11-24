@@ -2,8 +2,8 @@ import java.util.LinkedList;
 import maze.Maze;
 import maze.Pair;
 
-public class BidirectionalDepthSolver implements ISolver {
-	public BidirectionalDepthSolver() {
+public class AStarSolver implements ISolver {
+	public AStarSolver() {
 	}
 	
 	public LinkedList<Pair> solveMaze(Maze maze) {
@@ -12,6 +12,8 @@ public class BidirectionalDepthSolver implements ISolver {
 		int[][] didVisit;
 		LinkedList<Pair> linkedStackStart = new LinkedList<Pair>();
 		LinkedList<Pair> linkedStackEnd = new LinkedList<Pair>();
+		Pair goal = maze.getEndLocation();
+		
 		
     	pairWeCameFrom = new Pair[maze.getWidth()][maze.getHeight()];
     	didVisit = new int[maze.getWidth()][maze.getHeight()];
@@ -31,14 +33,30 @@ public class BidirectionalDepthSolver implements ISolver {
     		if(currentLinkedStack == linkedStackStart) {
     			currentLinkedStack = linkedStackEnd;
     			currentTag = 2;
-    		} else if (currentLinkedStack == linkedStackEnd) {
+    		} else {
     			currentLinkedStack = linkedStackStart;
     			currentTag = 1;
     		}
     		
     		
+    		// determine the best one to remove.
+    		// go through every element in our list and see which one has the best heuristic
+    		int bestHeuristic = Integer.MAX_VALUE;
+    		Pair current = null;
+    		for(Pair p : currentLinkedStack) {
+    			int currentHeuristic = calcHeuristic(p, goal);
+
+    			if(currentHeuristic < bestHeuristic) {
+    				bestHeuristic = currentHeuristic;
+    				current = p;
+    			}
+    		}
     		
-    		Pair current = currentLinkedStack.removeFirst();
+    		if (current == null) continue; // Uh oh.
+    		currentLinkedStack.remove(current);
+    		
+    		goal = current;
+    		
     		LinkedList<Pair> neighbors = maze.Observe(current);
     	  	
     		for(Pair p : neighbors) {
@@ -78,4 +96,10 @@ public class BidirectionalDepthSolver implements ISolver {
     		return answer;
     	}
     }
+	
+	private int calcHeuristic(Pair current, Pair goal) {
+		// Manhattan Distance
+		return Math.abs(goal.x - current.x) + Math.abs(goal.y - current.y);
+	}
 }
+

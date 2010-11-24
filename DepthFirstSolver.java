@@ -43,10 +43,9 @@ public class DepthFirstSolver implements ISolver {
     	
     	while(check != null) {
     		// we will start from the end and add the previousNode to the front of our list
-    		answer.addFirst(pairWeCameFrom[check.x][check.y]);
+    		answer.addFirst(check);
     		check = pairWeCameFrom[check.x][check.y];
     	}
-    	answer.removeFirst();
     	
     	return answer;
     }
