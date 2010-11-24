@@ -16,36 +16,54 @@ public class Test extends JFrame
     {
         super();
 
-        MazeGenerator mg = new MazeGenerator(MazeGenerator.Type.Wilson);
-        mz = mg.generateMaze(70,70);
-        //mz = mg.generateMaze(500,500);
+        MazeSolver[] solvers = { new MazeSolver(MazeSolver.Type.BreadthFirst), new MazeSolver(MazeSolver.Type.DepthFirst), new MazeSolver(MazeSolver.Type.BidirectionalDepth), 
+        							   new MazeSolver(MazeSolver.Type.AStarSimple), new MazeSolver(MazeSolver.Type.AStar), new MazeSolver(MazeSolver.Type.AdaptiveAStar)};
         
-        MazeSolver breadthSolver = new MazeSolver(MazeSolver.Type.BreadthFirst);
-        LinkedList<Pair> optimalSolution = breadthSolver.solveMaze(mz);
-        int numMoves = optimalSolution.size();
-        System.out.println(MazeSolver.Type.BreadthFirst + ": optimal path " + numMoves + ", numObservations " + mz.getNumObservations());
+        float[] scores = new float[solvers.length];
+        final int k_numIterations = 20;
         
-        MazeSolver.Type[] attempts = { MazeSolver.Type.DepthFirst, MazeSolver.Type.BidirectionalDepth, MazeSolver.Type.AStarSimple, MazeSolver.Type.AStar};
-        
-        for (MazeSolver.Type type : attempts) {
-            mz = mg.getLastMaze();
-
-            MazeSolver ms = new MazeSolver(type);
-            solution = ms.solveMaze(mz); // make it so that the different solutions are drawn in different colors
-            System.out.println(type + ": Score " + (float) mz.getNumObservations() / numMoves + ", numObservations " + mz.getNumObservations());
-            if (!verifyAnswer(solution, mz.getStartLocation(), mz.getEndLocation())) {
-            	System.out.println("================= MAZE SOLUTION IS NOT VALID ================");
-            	System.out.println(solution);
-            	System.out.println("=============================================================");
-            }
+        for (int i = 0; i < k_numIterations; ++i) {
+	        MazeGenerator mg = new MazeGenerator(MazeGenerator.Type.Wilson);
+	        mz = mg.generateMaze(70,70);
+	        //mz = mg.generateMaze(500,500);
+	        int numMoves = -1;
+	        
+	        for (int j = 0; j < solvers.length; ++j) {
+	            mz = mg.getLastMaze();
+	            
+	            MazeSolver ms = solvers[j];
+	            solution = ms.solveMaze(mz); // make it so that the different solutions are drawn in different colors
+	            if (j == 0) {
+	            	// j == 0 is breadth first, its solution will be the optimal one so use it to determine the minimum number of moves.
+	            	numMoves = solution.size();
+	            }
+	            
+	            System.out.println("== " + ms + ": Score " + (float) mz.getNumObservations() / numMoves + ", numObservations " + mz.getNumObservations());
+	            scores[j] += ((float) (mz.getNumObservations() - numMoves)) / k_numIterations;
+	            
+	            if (!verifyAnswer(solution, mz.getStartLocation(), mz.getEndLocation())) {
+	            	System.out.println("================= MAZE SOLUTION IS NOT VALID ================");
+	            	System.out.println(solution);
+	            	System.out.println("=============================================================");
+	            }
+	        }
         }
+        
+        // Output scores.
+    	System.out.println("=========================== SCORES ==========================");
+    	for (int i = 0; i < solvers.length; ++i) {
+    		System.out.println(solvers[i] + ": " + scores[i]);
+    	}
+    	System.out.println("=============================================================");
     }
     
     boolean verifyAnswer(LinkedList<Pair> sol, Pair start, Pair end) {
-    	Pair cur = sol.removeFirst();
+    	Pair cur = sol.getFirst();
     	if (cur != start) return false;
     	
     	for (Pair p : sol) {
+    		if (p == cur) continue;
+    		
     		boolean xchange = (Math.abs(cur.x - p.x) == 1);
     		boolean ychange = (Math.abs(cur.y - p.y) == 1);
     		if (xchange == ychange) return false;
@@ -88,28 +106,19 @@ public class Test extends JFrame
 
     public void paint(Graphics g)
     {
-        mz.visualize(g);
-        
-        Graphics2D gobj = (Graphics2D)g;
+    	mz.visualize(g);
 
-        gobj.setColor(Color.RED);
+    	Graphics2D gobj = (Graphics2D)g;
 
-        int D = 4;
-       
-       Iterator<Pair> i = solution.iterator();
+    	gobj.setColor(Color.RED);
 
-       Pair current = i.next();
-       Pair next = i.next();
-       gobj.drawLine(D*current.x + D/2, D*current.y + D/2, D*next.x + D/2, D*next.y + D/2);
-        while(i.hasNext()) {
-            current = next;
-            next = i.next();
-            gobj.drawLine(D*current.x + D/2, D*current.y + D/2, D*next.x + D/2, D*next.y + D/2);
+    	int D = 4;
 
-        }
-        current = next;
-        next = mz.getEndLocation();
-        gobj.drawLine(D*current.x + D/2, D*current.y + D/2, D*next.x + D/2, D*next.y + D/2);
+    	Pair last = null;
+    	for (Pair next : solution) {
+    		if (last != null) gobj.drawLine(D*last.x + D/2, D*last.y + D/2, D*next.x + D/2, D*next.y + D/2);
+    		last = next;
+    	}
 
     }
 }

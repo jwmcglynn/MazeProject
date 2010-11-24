@@ -5,15 +5,15 @@ import maze.Pair;
 
 
 public class DepthFirstSolver implements ISolver {
-	private LinkedList<Pair> answer = new LinkedList<Pair>();
-	private Pair[][] pairWeCameFrom;
-	private boolean[][] didVisit;
-	private LinkedList<Pair> linkedStack = new LinkedList<Pair>();
-	
 	public DepthFirstSolver() {
 	}
 	
 	public LinkedList<Pair> solveMaze(Maze maze) {
+		LinkedList<Pair> answer = new LinkedList<Pair>();
+		Pair[][] pairWeCameFrom;
+		boolean[][] didVisit;
+		LinkedList<Pair> linkedStack = new LinkedList<Pair>();
+		
     	pairWeCameFrom = new Pair[maze.getWidth()][maze.getHeight()];
     	didVisit = new boolean[maze.getWidth()][maze.getHeight()];
     	

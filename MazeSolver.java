@@ -10,6 +10,7 @@ public class MazeSolver
 		, BidirectionalDepth
 		, AStarSimple
 		, AStar
+		, AdaptiveAStar
 	}
 	
 	private Type m_genType;
@@ -40,6 +41,9 @@ public class MazeSolver
 	    	case AStar:
 	    		ds = new AStarSolver();
 	    		break;
+	    	case AdaptiveAStar:
+	    		ds = new AdaptiveAStarSolver();
+	    		break;
     	}
 
 		LinkedList<Pair> ret = ds.solveMaze(maze);
@@ -47,5 +51,9 @@ public class MazeSolver
 		
 		System.out.println("Took " + m_genType + " " + (double) (end - start) / 1000000000.0 + " seconds to solve maze.");
 		return ret;
+    }
+    
+    public String toString() {
+    	return m_genType.toString();
     }
 }

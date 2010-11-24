@@ -5,15 +5,15 @@ import maze.Pair;
 
 
 public class BreadthFirstSolver implements ISolver{
-	private LinkedList<Pair> answer = new LinkedList<Pair>();
-	private Pair[][] pairWeCameFrom;
-	private boolean[][] didVisit;
-	private LinkedList<Pair> linkedQueue = new LinkedList<Pair>();
-	
 	public BreadthFirstSolver() {
 	}
 	
 	public LinkedList<Pair> solveMaze(Maze maze) {
+		LinkedList<Pair> answer = new LinkedList<Pair>();
+		Pair[][] pairWeCameFrom;
+		boolean[][] didVisit;
+		LinkedList<Pair> linkedQueue = new LinkedList<Pair>();
+		
     	pairWeCameFrom = new Pair[maze.getWidth()][maze.getHeight()];
     	didVisit = new boolean[maze.getWidth()][maze.getHeight()];
     	
@@ -41,13 +41,12 @@ public class BreadthFirstSolver implements ISolver{
 		// to retrace our steps. 
 		Pair check = maze.getEndLocation();
 		
-		while(check != null) {
-			// we will start from the end and add the previousNode to the front of our list
-			answer.addFirst(pairWeCameFrom[check.x][check.y]);
-			check = pairWeCameFrom[check.x][check.y];
-		}
-		answer.removeFirst();
-				
+    	while(check != null) {
+    		// we will start from the end and add the previousNode to the front of our list
+    		answer.addFirst(check);
+    		check = pairWeCameFrom[check.x][check.y];
+    	}
+			
 		return answer;
 	}
 }
