@@ -116,7 +116,6 @@ public class AdaptiveAStarSolver implements ISolver {
 	
 		// For now keep weight as constant. Tweak values to see which one produces better results on average.
 		final float weight = 0.25f; // Lower = favor manhattan distance, higher = favor probability.
-		
 		if (timesSolved == 0) return manhattanDistance;
 		
 		float modifier = 1.0f - (stats[current.x][current.y] / timesSolved); // [0.0, 1.0], lower is better.

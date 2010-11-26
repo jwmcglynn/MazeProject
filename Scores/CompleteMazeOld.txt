@@ -1,0 +1,91 @@
+Width: 500 Height: 500
+Number of iterations: 100
+Adaptive AStar Weight = 0.25
+=========================== SCORES ==========================
+BreadthFirst: 208540.14
+DepthFirst: 171985.66
+BidirectionalDepth: 154951.64
+AStarSimple: 83578.35
+AStar: 79006.9
+AdaptiveAStar: 77556.15
+=============================================================
+
+Width: 500 Height: 500
+Number of iterations: 100
+Adaptive AStar Weight = 0.25
+=========================== SCORES ==========================
+BreadthFirst: 408146.5
+DepthFirst: 334088.9
+BidirectionalDepth: 301699.38
+AStarSimple: 167741.38
+AStar: 163665.89
+AdaptiveAStar: 159440.14
+=============================================================
+
+Width: 500 Height: 500
+Number of iterations: 100
+Adaptive AStar Weight = 0.25
+=========================== SCORES ==========================
+BreadthFirst: 618963.0
+DepthFirst: 499867.88
+BidirectionalDepth: 452620.66
+AStarSimple: 252522.31
+AStar: 239228.23
+AdaptiveAStar: 232385.97
+=============================================================
+
+
+Width: 500 Height: 500
+Number of iterations: 100
+Adaptive AStar Weight = 0.25
+=========================== SCORES ==========================
+BreadthFirst: 210217.03
+DepthFirst: 160134.9
+BidirectionalDepth: 145010.78
+AStarSimple: 80005.54
+AStar: 69506.836
+AdaptiveAStar: 68427.07
+=============================================================
+Performance of Adaptive A* = 1.0157799
+
+Width: 500 Height: 500
+Number of iterations: 100
+Adaptive AStar Weight = 0.7
+=========================== SCORES ==========================
+BreadthFirst: 209150.0
+DepthFirst: 159160.69
+BidirectionalDepth: 141542.34
+AStarSimple: 82681.46
+AStar: 74989.45
+AdaptiveAStar: 72475.164
+=============================================================
+Performance of Adaptive A* = 1.0346917
+
+Took 1166.613248
+Width: 500 Height: 500
+Number of iterations: 100
+Adaptive AStar Weight = 0.75
+=========================== SCORES ==========================
+BreadthFirst: 202559.89
+DepthFirst: 165303.12
+BidirectionalDepth: 146951.75
+AStarSimple: 77249.77
+AStar: 73340.555
+AdaptiveAStar: 74774.25
+=============================================================
+Performance of Adaptive A* = 0.9808264
+
+Took 1243.600488
+Width: 500 Height: 500
+Number of iterations: 100
+Adaptive AStar Weight = 0.75
+=========================== SCORES ==========================
+BreadthFirst: 213014.55
+DepthFirst: 164781.05
+BidirectionalDepth: 149307.56
+AStarSimple: 84357.57
+AStar: 80615.47
+AdaptiveAStar: 79445.086
+=============================================================
+Performance of Adaptive A* = 1.014732
+

@@ -23,13 +23,15 @@ public class Test extends JFrame
         
         float[] scores = new float[solvers.length];
         final int k_numIterations = 100;
-        final int k_numOfAttempts = 5;
+        final int k_numOfAttempts = 1;
+        final int sizeOfMaze = 500;
         
         for(int num = 0; num < k_numOfAttempts; num++) {
+    		long start = System.nanoTime();
+    		
 	        for (int i = 0; i < k_numIterations; ++i) {
 		        MazeGenerator mg = new MazeGenerator(MazeGenerator.Type.Wilson);
-		        //mz = mg.generateMaze(70,70);
-		        mz = mg.generateMaze(500,500);
+		        mz = mg.generateMaze(sizeOfMaze,sizeOfMaze);
 		        int numMoves = -1;
 		        
 		        for (int j = 0; j < solvers.length; ++j) {
@@ -55,12 +57,23 @@ public class Test extends JFrame
 		        System.out.println();
 	        }
 	        
+			long end = System.nanoTime();
+	        
 	        // output the dimensions of the maze, how many iterations, the weight of adaptive, and the final scores.
 	        FileWriter fstream;
 			try {
-				fstream = new FileWriter("Scores.txt", true);
-		        BufferedWriter output = new BufferedWriter(fstream);        
+				String file = "";
+				if(sizeOfMaze == 500) {
+					file = "Scores/CompleteMaze.txt";
+				} else {
+					file = "Scores/AlternateMaze.txt";
+				}
+				
+				fstream = new FileWriter(file, true);
+		        BufferedWriter output = new BufferedWriter(fstream);
 		        
+				output.write("Took " + (double) (end - start) / 1000000000.0);
+				output.newLine();
 		        output.write("Width: " + mz.getWidth() + " Height: "  + mz.getHeight());
 		        output.newLine();
 		        output.write("Number of iterations: " + k_numIterations);
@@ -70,12 +83,24 @@ public class Test extends JFrame
 		        
 		    	output.write("=========================== SCORES ==========================");
 		    	output.newLine();
+		    	
+		    	float AStarScore = 0.0f, AdaptiveScore = 0.0f;
+		    	
 		    	for (int i = 0; i < solvers.length; ++i) {
 		    		output.write(solvers[i] + ": " + scores[i]);
 		    		output.newLine();
+		    		
+		    		if(solvers[i].toString().equals("AStar")) {
+		    			AStarScore = scores[i];
+		    		} else if(solvers[i].toString().equals("AdaptiveAStar")){
+		    			AdaptiveScore = scores[i];
+		    		}
 		    	}
 		    	output.write("=============================================================");
 		    	output.newLine();
+		    	
+		    	output.write("Performance of Adaptive A* = " + AStarScore / AdaptiveScore);
+		    	output.newLine();		    	
 		    	output.newLine();
 	
 		    	output.close();
@@ -85,11 +110,20 @@ public class Test extends JFrame
 			
 			
 	        // Output scores to console.
+			float AStarScore = 0.0f, AdaptiveScore = 0.0f;
+			
+			System.out.println("Took " + (double) (end - start) / 1000000000.0 + " for " + k_numIterations + " of size " + sizeOfMaze + " by " + sizeOfMaze);
 	    	System.out.println("=========================== SCORES ==========================");
 	    	for (int i = 0; i < solvers.length; ++i) {
 	    		System.out.println(solvers[i] + ": " + scores[i]);
+	    		if(solvers[i].toString().equals("AStar")) {
+	    			AStarScore = scores[i];
+	    		} else if(solvers[i].toString().equals("AdaptiveAStar")){
+	    			AdaptiveScore = scores[i];
+	    		}
 	    	}
 	    	System.out.println("=============================================================");
+	    	System.out.println("Performance of Adaptive A* = " + AStarScore / AdaptiveScore);
 	    }
     }
     
