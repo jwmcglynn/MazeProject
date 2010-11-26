@@ -39,7 +39,7 @@ public class MazeGenerator {
 		m_maze = gen.generate(width, height);
 		long end = System.nanoTime();
 		
-		System.out.println("Took " + (double) (end - start) / 1000000000.0 + " seconds to compute maze.");
+		System.out.println("Took " + (double) (end - start) / 1000000000.0 + " seconds to create maze.");
 		return getLastMaze();
 	}
 	

@@ -1,8 +1,10 @@
 import java.awt.*;
-import java.util.*;
-
+import java.io.*;
 import javax.swing.*;
-import maze.*;
+import java.util.LinkedList;
+
+import maze.Maze;
+import maze.Pair;
 
 public class Test extends JFrame
 {
@@ -20,41 +22,75 @@ public class Test extends JFrame
         							   new MazeSolver(MazeSolver.Type.AStarSimple), new MazeSolver(MazeSolver.Type.AStar), new MazeSolver(MazeSolver.Type.AdaptiveAStar)};
         
         float[] scores = new float[solvers.length];
-        final int k_numIterations = 20;
+        final int k_numIterations = 100;
+        final int k_numOfAttempts = 5;
         
-        for (int i = 0; i < k_numIterations; ++i) {
-	        MazeGenerator mg = new MazeGenerator(MazeGenerator.Type.Wilson);
-	        mz = mg.generateMaze(70,70);
-	        //mz = mg.generateMaze(500,500);
-	        int numMoves = -1;
-	        
-	        for (int j = 0; j < solvers.length; ++j) {
-	            mz = mg.getLastMaze();
-	            
-	            MazeSolver ms = solvers[j];
-	            solution = ms.solveMaze(mz); // make it so that the different solutions are drawn in different colors
-	            if (j == 0) {
-	            	// j == 0 is breadth first, its solution will be the optimal one so use it to determine the minimum number of moves.
-	            	numMoves = solution.size();
-	            }
-	            
-	            System.out.println("== " + ms + ": Score " + (float) mz.getNumObservations() / numMoves + ", numObservations " + mz.getNumObservations());
-	            scores[j] += ((float) (mz.getNumObservations() - numMoves)) / k_numIterations;
-	            
-	            if (!verifyAnswer(solution, mz.getStartLocation(), mz.getEndLocation())) {
-	            	System.out.println("================= MAZE SOLUTION IS NOT VALID ================");
-	            	System.out.println(solution);
-	            	System.out.println("=============================================================");
-	            }
+        for(int num = 0; num < k_numOfAttempts; num++) {
+	        for (int i = 0; i < k_numIterations; ++i) {
+		        MazeGenerator mg = new MazeGenerator(MazeGenerator.Type.Wilson);
+		        //mz = mg.generateMaze(70,70);
+		        mz = mg.generateMaze(500,500);
+		        int numMoves = -1;
+		        
+		        for (int j = 0; j < solvers.length; ++j) {
+		            mz = mg.getLastMaze();
+		            
+		            MazeSolver ms = solvers[j];
+		            solution = ms.solveMaze(mz); // make it so that the different solutions are drawn in different colors
+		            if (j == 0) {
+		            	// j == 0 is breadth first, its solution will be the optimal one so use it to determine the minimum number of moves.
+		            	numMoves = solution.size();
+		            }
+		            
+		            System.out.println("== " + ms + ": Score " + (float) mz.getNumObservations() / numMoves + ", numObservations " + mz.getNumObservations());
+		            scores[j] += ((float) (mz.getNumObservations() - numMoves)) / k_numIterations;
+		            
+		            if (!verifyAnswer(solution, mz.getStartLocation(), mz.getEndLocation())) {
+		            	System.out.println("================= MAZE SOLUTION IS NOT VALID ================");
+		            	System.out.println(solution);
+		            	System.out.println("=============================================================");
+		            }
+		        }
+		        
+		        System.out.println();
 	        }
-        }
-        
-        // Output scores.
-    	System.out.println("=========================== SCORES ==========================");
-    	for (int i = 0; i < solvers.length; ++i) {
-    		System.out.println(solvers[i] + ": " + scores[i]);
-    	}
-    	System.out.println("=============================================================");
+	        
+	        // output the dimensions of the maze, how many iterations, the weight of adaptive, and the final scores.
+	        FileWriter fstream;
+			try {
+				fstream = new FileWriter("Scores.txt", true);
+		        BufferedWriter output = new BufferedWriter(fstream);        
+		        
+		        output.write("Width: " + mz.getWidth() + " Height: "  + mz.getHeight());
+		        output.newLine();
+		        output.write("Number of iterations: " + k_numIterations);
+		        output.newLine();
+		        output.write("Adaptive AStar Weight = 0.25");
+		        output.newLine();
+		        
+		    	output.write("=========================== SCORES ==========================");
+		    	output.newLine();
+		    	for (int i = 0; i < solvers.length; ++i) {
+		    		output.write(solvers[i] + ": " + scores[i]);
+		    		output.newLine();
+		    	}
+		    	output.write("=============================================================");
+		    	output.newLine();
+		    	output.newLine();
+	
+		    	output.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			
+			
+	        // Output scores to console.
+	    	System.out.println("=========================== SCORES ==========================");
+	    	for (int i = 0; i < solvers.length; ++i) {
+	    		System.out.println(solvers[i] + ": " + scores[i]);
+	    	}
+	    	System.out.println("=============================================================");
+	    }
     }
     
     boolean verifyAnswer(LinkedList<Pair> sol, Pair start, Pair end) {

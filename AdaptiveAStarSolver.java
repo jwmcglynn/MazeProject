@@ -3,21 +3,22 @@ import maze.Maze;
 import maze.Pair;
 
 public class AdaptiveAStarSolver implements ISolver {
+	//private float[][] stats = new float[70][70];
+	private float[][] stats = new float[500][500];
+
+	private float timesSolved = 0.0f;
+	
 	public AdaptiveAStarSolver() {
 	}
 	
 	public LinkedList<Pair> solveMaze(Maze maze) {
 		LinkedList<Pair> answer = new LinkedList<Pair>();
-		Pair[][] pairWeCameFrom;
-		int[][] didVisit;
+		Pair[][] pairWeCameFrom = new Pair[maze.getWidth()][maze.getHeight()];;
+		int[][] didVisit = new int[maze.getWidth()][maze.getHeight()];;
 		LinkedList<Pair> linkedStackStart = new LinkedList<Pair>();
 		LinkedList<Pair> linkedStackEnd = new LinkedList<Pair>();
 		Pair goal = maze.getEndLocation();
 		
-		
-    	pairWeCameFrom = new Pair[maze.getWidth()][maze.getHeight()];
-    	didVisit = new int[maze.getWidth()][maze.getHeight()];
-    	
     	linkedStackStart.addFirst(maze.getStartLocation());
     	linkedStackEnd.addFirst(maze.getEndLocation());
     	
@@ -84,6 +85,8 @@ public class AdaptiveAStarSolver implements ISolver {
     		answerOtherFrontier = pairWeCameFrom[answerOtherFrontier.x][answerOtherFrontier.y];
     	}
     	
+    	timesSolved++;
+
     	// Possibly reverse list to be from start->end.
     	if (currentLinkedStack == linkedStackEnd) {
         	LinkedList<Pair> reverseAnswer = new LinkedList<Pair>();
@@ -91,29 +94,38 @@ public class AdaptiveAStarSolver implements ISolver {
     			reverseAnswer.addFirst(p);
     		}
     		
+    		// Add our answers to our statistics.
+    		for(Pair p : reverseAnswer) {
+    			stats[p.x][p.y] += 1;
+    		}
+    		
     		return reverseAnswer;
     	} else {
+    		// Add our answers to our statistics.
+       		for(Pair p : answer) {
+    			stats[p.x][p.y] += 1;
+    		}
     		return answer;
     	}
     }
 	
 	// After we find our solution, update our statistics so we have accurate information for our next run.
 	private float calcHeuristic(Pair current, Pair goal) {
-		// Improve Heuristic.
-		// Will store a Width X Height matrix of statistics. 
-		// Each node will be given +1 if it has appeared in the final answer. 
-		
-		//MINIMIZE MANHATTAN DISTANCE but MAXIMIZE PROBABILITY
-		
 		// Manhattan Distance
-		return Math.abs(goal.x - current.x) + Math.abs(goal.y - current.y);
-		
+		float manhattanDistance = getManhattanDistance(current, goal);
+	
 		// For now keep weight as constant. Tweak values to see which one produces better results on average.
-		//final float weight = 0.5f; // Lower = favor manhattan distance, higher = favor probability.
-		//if (timesSolved == 0) return ManhattanDistance;
-		//float modifier = 1.0f - (prob[current] / timesSolved); // [0.0, 1.0], lower is better.
-		// modifier = modifier * weight; // [0.0, weight], lower is better.
-		// return ManhattanDistance + ManhattanDistance * modifier;
+		final float weight = 0.25f; // Lower = favor manhattan distance, higher = favor probability.
+		
+		if (timesSolved == 0) return manhattanDistance;
+		
+		float modifier = 1.0f - (stats[current.x][current.y] / timesSolved); // [0.0, 1.0], lower is better.
+		modifier = modifier * weight; // [0.0, weight], lower is better.
+		return manhattanDistance + manhattanDistance * modifier;
+	}
+	
+	private float getManhattanDistance(Pair current, Pair goal) {
+		return Math.abs(goal.x - current.x) + Math.abs(goal.y - current.y);
 	}
 }
 

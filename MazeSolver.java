@@ -3,6 +3,8 @@ import java.util.*;
 import maze.*;
 public class MazeSolver
 {
+	ISolver ds;
+	
 	public enum Type
 	{
 		BreadthFirst
@@ -18,12 +20,7 @@ public class MazeSolver
     public MazeSolver(Type genType)
     {
     	m_genType = genType;
-    }
-
-    public LinkedList<Pair> solveMaze(Maze maze)
-    {
-		long start = System.nanoTime();
-    	ISolver ds = null;
+    	ds = null;
     	
     	switch (m_genType) {
 	    	case BreadthFirst:
@@ -45,6 +42,11 @@ public class MazeSolver
 	    		ds = new AdaptiveAStarSolver();
 	    		break;
     	}
+    }
+
+    public LinkedList<Pair> solveMaze(Maze maze)
+    {
+		long start = System.nanoTime();
 
 		LinkedList<Pair> ret = ds.solveMaze(maze);
 		long end = System.nanoTime();
