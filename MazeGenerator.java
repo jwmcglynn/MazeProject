@@ -7,6 +7,7 @@ public class MazeGenerator {
 	public enum Type {
 		Dummy
 		, Wilson
+		, ImprovedWilson
 		, Eller
 		, Eller2
 	}
@@ -27,6 +28,9 @@ public class MazeGenerator {
 				break;
 			case Wilson:
 				gen = new WilsonGenerator();
+				break;
+			case ImprovedWilson:
+				gen = new ImprovedWilsonGenerator();
 				break;
 			case Eller:
 				gen = new EllerGenerator();

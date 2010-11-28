@@ -30,7 +30,7 @@ public class Test extends JFrame
     		long start = System.nanoTime();
     		
 	        for (int i = 0; i < k_numIterations; ++i) {
-		        MazeGenerator mg = new MazeGenerator(MazeGenerator.Type.Wilson);
+		        MazeGenerator mg = new MazeGenerator(MazeGenerator.Type.ImprovedWilson);
 		        mz = mg.generateMaze(sizeOfMaze,sizeOfMaze);
 		        int numMoves = -1;
 		        
