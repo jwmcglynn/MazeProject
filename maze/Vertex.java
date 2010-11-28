@@ -24,12 +24,12 @@ public class Vertex
 
     public LinkedList<Pair> getLegalNeighbors()
     {
-        return legalNeighbors;
+        return (LinkedList<Pair>) legalNeighbors.clone();
     }
 
     public LinkedList<Pair> getNeighbors()
     {
-        return neighbors;
+        return (LinkedList<Pair>) neighbors.clone();
     }
 
     public void setNeighbors(LinkedList<Pair> nlist)

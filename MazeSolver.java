@@ -17,6 +17,21 @@ public class MazeSolver
 	
 	private Type m_genType;
 	
+	/**
+	 * Constructor called from test code.
+	 * 
+	 * @param k
+	 */
+	public MazeSolver(int k) {
+		m_genType = Type.AdaptiveAStar;
+		ds = new AdaptiveAStarSolver();
+	}
+	
+	/**
+	 * Create solver with specific type.
+	 * TODO: Remove before submitting.
+	 * @param genType
+	 */
     public MazeSolver(Type genType)
     {
     	m_genType = genType;

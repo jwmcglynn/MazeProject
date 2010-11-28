@@ -233,6 +233,16 @@ public class Maze
 
         }
 
+
+        public void remEdge(Pair p, Pair q)
+        {
+            Vertex v1 = maze[p.x][p.y];
+            Vertex v2 = maze[q.x][q.y];
+            v1.remNeighbor(q);
+            v2.remNeighbor(p);
+        }
+
+
         public Maze getFixedMaze()
         {
             Maze mz = new Maze(maze,start,end,width,height);
