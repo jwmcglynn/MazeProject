@@ -1,16 +1,32 @@
-import java.util.LinkedList;
-import maze.Maze;
-import maze.Pair;
+/**
+ * Maze Project
+ * CS171
+ * 
+ * Jeff McGlynn
+ * Jesus Quezada
+ * 
+ * November 29th, 2010
+**/
+
+import java.util.*;
+import maze.*;
 
 public class AdaptiveAStarSolver implements ISolver {
-	//private float[][] stats = new float[70][70];
+	/// Statistics from past solutions.
 	private float[][] stats = new float[500][500];
-
+	/// Number of times the solver has been used.
 	private float timesSolved = 0.0f;
 	
 	public AdaptiveAStarSolver() {
 	}
 	
+	/**
+	 * Find a solution to the maze using a statistics-enhanced bidirectional
+	 * A* solver.
+	 * 
+	 * @param maze Maze to solve.
+	 * @return Solution to maze.
+	**/
 	public LinkedList<Pair> solveMaze(Maze maze) {
 		LinkedList<Pair> answer = new LinkedList<Pair>();
 		Pair[][] pairWeCameFrom = new Pair[maze.getWidth()][maze.getHeight()];;
@@ -30,6 +46,7 @@ public class AdaptiveAStarSolver implements ISolver {
 		Pair answerFrontier = null;
 		Pair answerOtherFrontier = null;
 		
+		// Alternate between the two frontiers and try to connect them.
     	while(answerFrontier == null && linkedStackStart.size() != 0 && linkedStackEnd.size() != 0) {
     		if(currentLinkedStack == linkedStackStart) {
     			currentLinkedStack = linkedStackEnd;

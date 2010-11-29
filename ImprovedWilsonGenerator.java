@@ -1,6 +1,14 @@
-import java.util.LinkedList;
-import java.util.Random;
+/**
+ * Maze Project
+ * CS171
+ * 
+ * Jeff McGlynn
+ * Jesus Quezada
+ * 
+ * November 29th, 2010
+**/
 
+import java.util.*;
 import maze.*;
 
 /**
@@ -10,7 +18,6 @@ import maze.*;
  * worst possible start/end points.
  * 
 **/
-
 
 public class ImprovedWilsonGenerator implements IGenerator {
 	private Random m_randomGen = new Random();
