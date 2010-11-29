@@ -15,11 +15,18 @@ import maze.*;
 public class ImprovedWilsonGenerator implements IGenerator {
 	private Random m_randomGen = new Random();
 	
-	
-	
 	public ImprovedWilsonGenerator() {
 	}
 	
+	/**
+	 * Find the neighbor of a position in a specified direction.
+	 * Return null if neighbor is outside the bounds of the maze.
+	 * 
+	 * @param cur Current position.
+	 * @param dir Direction to move.  0 = left, 1 = right, 2 = up, 3 = down.
+	 * @param maze Vertex table.
+	 * @return Neighbor or null if not possible.
+	 */
 	private Pair neighbor(Pair cur, int dir, Vertex[][] maze) {
 		int x = cur.x;
 		int y = cur.y;
@@ -35,32 +42,40 @@ public class ImprovedWilsonGenerator implements IGenerator {
 		else return null;
 	}
 	
-	public boolean inside(Pair p, int width, int height) {
-		return (p.x >= 0 && p.x < width && p.y >= 0 && p.y < height);
-	}
-	
-	public boolean inside(int x, int y, int width, int height) {
-		return (x >= 0 && x < width && y >= 0 && y < height);
-	}
-	
-	Pair findFurthestAndAddLoops(Maze.WriteableMaze wrmaze, Vertex[][] maze, int width, int height, Pair start) {
+	/**
+	 * Perform post-processing step on generated maze to make it more difficult to solve.
+	 * 
+	 * Sets the endpoint in wrmaze and removes walls to add loops.
+	 * 
+	 * @param wrmaze WriteableMaze to modify.
+	 * @param maze Vertex table.
+	 * @param width Width of maze.
+	 * @param height Height of maze.
+	 * @param start Start point.
+	 * @return Endpoint.
+	 */
+	Pair findFarthestAndAddLoops(Maze.WriteableMaze wrmaze, Vertex[][] maze, int width, int height, Pair start) {
+		// Populate the depth table by fully traversing the maze.
 		int depth[][] = new int[width][height];
-		
 		LinkedList<Pair> stack = new LinkedList<Pair>();
 		stack.add(start);
 		
+		// Keep track of farthest node from start while doing so.
 		int furthest = 0;
 		Pair furthestPair = null;
 		
+		// Depth-first search.
 		while (!stack.isEmpty()) {
 			Pair pair = stack.removeFirst();
 			int d = depth[pair.x][pair.y];
 			
 			if (d > furthest) {
+				// Found a new farthest node.
 				furthest = d;
 				furthestPair = pair;
 			}
 			
+			// Add untraversed neighbors to frontier.
 			for (Pair v : maze[pair.x][pair.y].getNeighbors()) {
 				if (depth[v.x][v.y] > 0) continue;
 				depth[v.x][v.y] = d + 1;
@@ -74,12 +89,13 @@ public class ImprovedWilsonGenerator implements IGenerator {
 				int distX = Math.abs(depth[x - 1][y] - depth[x][y]);
 				int distY = Math.abs(depth[x][y - 1] - depth[x][y]);
 				
+				// If the x- or y- neighbor is less than seven moves away remove the wall.
 				if (distX < 7) {
 					wrmaze.addEdge(maze[x - 1][y].getP(), maze[x][y].getP());
-					depth[x][y] = 10000000;
+					depth[x][y] = 10000000; // Arbitrary big number.
 				} else if (distY < 7) {
 					wrmaze.addEdge(maze[x][y - 1].getP(), maze[x][y].getP());
-					depth[x][y] = 10000000;
+					depth[x][y] = 10000000; // Arbitrary big number.
 				}
 			}
 		}
@@ -89,6 +105,12 @@ public class ImprovedWilsonGenerator implements IGenerator {
 	}
 	/*************************************************************************/
 	
+	/**
+	 * Generate the maze using a modified Wilson's algorithm.
+	 * 
+	 * @param width Width of maze.
+	 * @param height Height of maze.
+	**/
 	public Maze.WriteableMaze generate(int width, int height) {
 		Maze tmp = new Maze();
 		Maze.WriteableMaze wrmaze = tmp.new WriteableMaze(width, height, false);
@@ -139,12 +161,11 @@ public class ImprovedWilsonGenerator implements IGenerator {
 				
 				wrmaze.addEdge(cur, next);
 				cur = next;
-				
 			} while (cur != end);
 		}
 		
 		// Maze is prepared.  Use depth-first search to determine what the farthest path is.
-		Pair furthest = findFurthestAndAddLoops(wrmaze, maze, width, height, startPos);
+		Pair furthest = findFarthestAndAddLoops(wrmaze, maze, width, height, startPos);
 		wrmaze.setEnd(furthest);
 		
 		return wrmaze;

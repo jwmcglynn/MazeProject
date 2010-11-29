@@ -6,7 +6,7 @@ import java.util.HashSet;
 import maze.*;
 
 /**
- * Eller's algorithm from http://www.bluffton.edu/~nesterd/java/mazeprofiler.html
+ * Eller's algorithm.
  * 
  * 1. Randomly connect some of the cells on the top row of the maze. Make a list 
  * of the sets of connected cells. (A cell which is not connected to any other 
